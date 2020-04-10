@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Main, Login, OrderForm, ViewOrders} from '../components';
+import { Main, Login, OrderForm, ViewOrders, Logout} from '../components';
 
 //// set props to check state for auth token ////
 const mapStateToProps = state => {
@@ -22,7 +22,8 @@ const AppRouter = (props) => {
     routes = (
       <Router>
         <Route path="/order" exact component={OrderForm} />
-        <Route path="/view-orders" exact component={ViewOrders} /> 
+        <Route path="/view-orders" exact component={ViewOrders} />
+        <Route path="/logout" exact component={Logout} /> 
       </Router>
     )
   };
