@@ -42,7 +42,7 @@ class OrderForm extends Component {
             }
         })
         .then(res => res.json())
-        .then(response => console.log("Success", JSON.stringify(response)))
+        .then(res => console.log("Success", JSON.stringify(res)))
         .catch(error => console.error(error));
     }
 
