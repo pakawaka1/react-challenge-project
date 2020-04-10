@@ -1,16 +1,34 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { Main, Login, OrderForm, ViewOrders } from '../components';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Main, Login, OrderForm, ViewOrders, Logout } from '../components';
+
+//// set props to check state for auth token ////
+const mapStateToProps = state => {
+  console.log(state.auth.token)
+  return {
+    isAuthenticated: state.auth.token !== null
+  };
+};
 
 const AppRouter = (props) => {
-  return (
+  let routes = (
     <Router>
       <Route path="/" exact component={Main} />
       <Route path="/login" exact component={Login} />
-      <Route path="/order" exact component={OrderForm} />
-      <Route path="/view-orders" exact component={ViewOrders} />
+      <Redirect to = '/' />
     </Router>
   );
+  if (props.isAuthenticated) {
+    routes = (
+      <Router>
+        <Route path="/order" exact component={OrderForm} />
+        <Route path="/view-orders" exact component={ViewOrders} /> 
+        <Route path="/logout" exact component={Logout} /> 
+      </Router>
+    )
+  };
+  return routes
 }
 
-export default AppRouter;
+export default connect(mapStateToProps, null)(AppRouter);
