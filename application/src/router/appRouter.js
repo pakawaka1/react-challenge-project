@@ -22,9 +22,8 @@ const AppRouter = (props) => {
     routes = (
       <Router>
         <Route path="/order" exact component={OrderForm} />
-        <Route path="/view-orders" exact component={ViewOrders} /> 
+        <Route path="/view-orders" exact component={ViewOrders} />
         <Route path="/logout" exact component={Logout} /> 
-
       </Router>
     )
   };

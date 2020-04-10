@@ -14,10 +14,14 @@ class LoginForm extends Component {
     password: "",
   }
 
+  //// use regex to validate email format, and check for email, password inputs ////
   login(e) {
     e.preventDefault();
-    this.props.commenceLogin(this.state.email, this.state.password);
-    this.props.onLogin();
+    const emailFormat = /^(([^<>()\\,;:\s@"]+(\.[^<>()\\,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.state.email)
+    if (this.state.password !=='' && (emailFormat)) {
+      this.props.commenceLogin(this.state.email, this.state.password);
+      this.props.onLogin();
+    }
   }
 
   onChange(key, val) {
@@ -43,4 +47,4 @@ class LoginForm extends Component {
   }
 }
 
-export default connect(null, mapActionsToProps)(LoginForm);
+export default connect(null, mapActionsToProps)(LoginForm)
