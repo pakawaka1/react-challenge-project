@@ -6,7 +6,8 @@ import './viewOrders.css';
 
 class ViewOrders extends Component {
     state = {
-        orders: []
+        orders: [],
+        selected: ''        
     }
 
     componentDidMount() {
@@ -15,21 +16,25 @@ class ViewOrders extends Component {
             .then(response => {
                 if(response.success) {
                     this.setState({ orders: response.orders });
-                    console.log(this.state.orders)
                 } else {
                     console.log('Error getting orders');
                 }
             });
     }
-
+    
     componentDidUpdate(prevState) {
         if (this.state.orders < prevState.orders) {
-            const updatedOrdersRef = this.updatedOrdersRef.current
-            return updatedOrdersRef.scrollHeight - updatedOrdersRef.scrollTop;
+            return this.updatedOrdersRef.current
         }
-        return null;
     }
 
+    confirmDeleteOrder(data) {
+        if (this.state.selected === '') {
+            return this.setState({selected: data})
+        } else {
+            return this.setState({selected: ''})
+        }
+    } 
 
     deleteOrder(data) {
         fetch(`${SERVER_IP}/api/delete-order`, {
@@ -46,7 +51,7 @@ class ViewOrders extends Component {
                 const updatedOrders = this.state.orders.filter((order) => (
                     order._id !== data
             ))  
-               this.setState({orders: updatedOrders })
+               this.setState({orders: updatedOrders, selected:''})
             } else {
                 console.log('Error getting orders');
             }
@@ -54,6 +59,23 @@ class ViewOrders extends Component {
     }
 
     render() {
+        const renderConfirmDelete = (orderId, orderItem) => {
+            if (this.state.selected === orderId) {
+                return (
+                    <div>
+                        <button onClick={() => this.confirmDeleteOrder()} className="btn btn-primary btn-sm btn-warning" key={orderId}>Cancel?</button>
+                        <button onClick={() => this.deleteOrder(orderId)+ this.confirmDeleteOrder()} className="btn btn-primary btn-sm btn-danger" key={orderItem}>Delete?</button>                    
+                     </div>
+                    
+                )
+            } else {
+                return (
+                    <div>
+                        <button onClick={() => this.confirmDeleteOrder(orderId)} className="btn btn-danger" key={orderId}>Delete</button>
+                     </div>
+                )
+            }
+        }
         return (
             <Template>
                 <div className="container-fluid">
@@ -65,13 +87,13 @@ class ViewOrders extends Component {
                                     <h2>{order.order_item}</h2>
                                     <p>Ordered by: {order.ordered_by || ''}</p>
                                 </div>
-                                <div className="col-md-4 d-flex view-order-middle-col">
+                                <div className="col-md-4 view-order-middle-col">
                                     <p>Order placed at {`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}</p>
                                     <p>Quantity: {order.quantity}</p>
                                  </div>
                                  <div className="col-md-4 view-order-right-col">
-                                     <button className="btn btn-success">Edit</button>
-                                     <button onClick={() => this.deleteOrder(order._id)}  className="btn btn-danger"key={order._id}>Delete</button>
+                                     <button className="btn btn-primary btn-success">Edit</button>
+                                     {renderConfirmDelete(order._id, order.order_item)}
                                  </div>
                             </div>
                         )
