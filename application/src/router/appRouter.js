@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Main, Login, OrderForm, ViewOrders, Logout } from '../components';
+import { Main, Login, OrderForm, ViewOrders, Logout} from '../components';
 
 //// set props to check state for auth token ////
 const mapStateToProps = state => {
