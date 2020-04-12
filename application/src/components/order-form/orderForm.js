@@ -3,7 +3,6 @@ import { Template } from '../../components';
 import { connect } from 'react-redux';
 import { SERVER_IP } from '../../private';
 import './orderForm.css';
-
 const ADD_ORDER_URL = `${SERVER_IP}/api/add-order`
 
 const mapStateToProps = (state) => ({
@@ -41,9 +40,9 @@ class OrderForm extends Component {
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => res.json())
+     .then(res => res.json())
         .then(res => console.log("Success", JSON.stringify(res)))
-        .catch(error => console.error(error));
+        .catch(error => console.error(error));   
     }
 
     render() {

@@ -15,14 +15,14 @@ const AppRouter = (props) => {
     <Router>
       <Route path="/" exact component={Main} />
       <Route path="/login" exact component={Login} />
-      <Redirect to='/login'></Redirect>
+      <Redirect to = '/' />
     </Router>
   );
   if (props.isAuthenticated) {
     routes = (
       <Router>
         <Route path="/order" exact component={OrderForm} />
-        <Route path="/view-orders" exact component={ViewOrders} />
+        <Route path="/view-orders" exact component={ViewOrders} /> 
         <Route path="/logout" exact component={Logout} /> 
       </Router>
     )
