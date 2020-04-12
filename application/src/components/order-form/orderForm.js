@@ -50,7 +50,6 @@ class OrderForm extends Component {
       <Template>
         <div className='form-wrapper'>
           <label className='form-label'>I'd like to order...</label>
-          <br />
           <SelectForm>
             <select value={this.state.order_item} />
             <select value={this.state.quantity} />

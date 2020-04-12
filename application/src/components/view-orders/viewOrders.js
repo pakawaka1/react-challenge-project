@@ -131,7 +131,6 @@ class ViewOrders extends Component {
         return (
           <div className='form-wrapper'>
             <label className='form-label'>Edit Your Order:</label>
-            <br />
             <SelectForm>
               <select value={this.state.order_item} />
               <select value={this.state.quantity} />
