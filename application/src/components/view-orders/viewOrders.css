@@ -31,6 +31,11 @@
     justify-content: flex-end;
 }
 
+.menu-select {
+    padding-top:3px;
+    padding-bottom: 3px;
+}
+
 @media only screen and (max-width: 768px) {
     .view-order-left-col {
         justify-content: center;

@@ -5,7 +5,6 @@ import { Main, Login, OrderForm, ViewOrders, Logout } from '../components';
 
 //// set props to check state for auth token ////
 const mapStateToProps = state => {
-  console.log(state.auth.token)
   return {
     isAuthenticated: state.auth.token !== null
   };
