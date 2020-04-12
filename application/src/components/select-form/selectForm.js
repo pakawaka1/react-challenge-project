@@ -3,9 +3,6 @@ import React, { Component } from 'react';
 class Form extends Component {
   constructor(props) {
     super(props);
-    console.log('ballsppe');
-    console.log(this.props.value);
-    console.log(props.value);
     this.state = {
       order_item: '',
       quantity: '',
@@ -21,7 +18,6 @@ class Form extends Component {
   }
 
   render() {
-    console.log(this.props.value);
     return (
       <form>
         <label>Select Menu Item: </label>
