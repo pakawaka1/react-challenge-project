@@ -26,7 +26,7 @@ class OrderForm extends Component {
   menuQuantityChosen(event) {
     this.setState({ quantity: event.target.value });
   }
-  
+
   async submitOrder(event) {
     event.preventDefault();
     if (this.state.order_item === '') return;
