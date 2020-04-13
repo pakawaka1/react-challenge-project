@@ -1,55 +1,194 @@
 import React, { Component } from 'react';
-import Moment from 'react-moment';
+// import Moment from 'react-moment'
+import axios from 'axios';
 import { Template } from '../../components';
 import { SERVER_IP } from '../../private';
 import './viewOrders.css';
+const URL = `${SERVER_IP}/api/`;
 
 class ViewOrders extends Component {
-    state = {
-        orders: []
-    }
+  constructor(props) {
+    super(props);
+    this.updatedOrdersRef = React.createRef();
+    this.state = {
+      orders: [],
+      order_item: '',
+      quantity: '',
+      deleteSelected: '',
+      editSelected: '',
+      ordered_by: '',
+    };
+  }
 
-    componentDidMount() {
-        fetch(`${SERVER_IP}/api/current-orders`)
-            .then(response => response.json())
-            .then(response => {
-                if(response.success) {
-                    this.setState({ orders: response.orders });
-                } else {
-                    console.log('Error getting orders');
-                }
-            });
-    }
+  componentDidMount() {
+    this.fetchOrders();
+  }
 
-    render() {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.orders.length <= this.state.orders.length) {
+      return this.updatedOrdersRef.current;
+    }
+  }
+
+  async fetchOrders() {
+    try {
+      const data = await axios.get(`${URL}/current-orders`);
+      return this.setState({ orders: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error getting orders');
+    }
+  }
+
+  editItemChosen(event) {
+    this.setState({ order_item: event.target.value });
+  }
+
+  editItemQuantity(event) {
+    this.setState({ quantity: event.target.value });
+  }
+
+  confirmEditOrder(data) {
+    if (this.state.editSelected === '') {
+      return this.setState({
+        editSelected: data._id,
+        ordered_by: data.ordered_by,
+        quantity: data.quantity,
+        order_item: data.order_item,
+      });
+    } else {
+      return this.setState({ editSelected: '' });
+    }
+  }
+
+  async editOrder(event, order) {
+    const orderItem = order.order_item;
+    const orderQuantity = order.quantity;
+    try {
+      const data = await axios.post(`${URL}/edit-order`, {
+        id: this.state.editSelected,
+        order_item:
+          this.state.order_item !== order.order_item
+            ? this.state.order_item
+            : orderItem,
+        quantity:
+          this.state.quantity !== order.quantity
+            ? this.state.quantity
+            : orderQuantity,
+      });
+      return this.setState({ orders: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error updating your order');
+    }
+  }
+
+  confirmDeleteOrder(data) {
+    if (this.state.deleteSelected === '') {
+      return this.setState({ deleteSelected: data._id });
+    } else {
+      return this.setState({ deleteSelected: '' });
+    }
+  }
+
+  async deleteOrder(orderData) {
+    try {
+      const data = await axios.post(`${URL}/delete-order`, {
+        id: orderData,
+      });
+      return this.setState({ orders: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error deleting your order.');
+    }
+  }
+  
+  render() {
+    const renderEditOrder = (order) => {
+      if (this.state.editSelected === order._id) {
         return (
-            <Template>
-                <div className="container-fluid">
-                    {this.state.orders.map(order => {
-                        const createdDate = new Date(order.createdAt);
-                        return (
-                            <div className="row view-order-container" key={order._id}>
-                                <div className="col-md-4 view-order-left-col p-3">
-                                    <h2>{order.order_item}</h2>
-                                    <p>Ordered by: {order.ordered_by || ''}</p>
-                                </div>
-                                <div className="col-md-4 d-flex view-order-middle-col">
-                                    <p>Order placed at
-                                        <Moment format='hh:mm:ss'>{`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}</Moment>
-                                    </p>
-                                    <p>Quantity: {order.quantity}</p>
-                                 </div>
-                                 <div className="col-md-4 view-order-right-col">
-                                     <button className="btn btn-success">Edit</button>
-                                     <button className="btn btn-danger">Delete</button>
-                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </Template>
         );
-    }
-}
+      } else {
+        return (
+          <div>
+            <h3>{order.order_item}</h3>
+            <p>Quantity: {order.quantity}</p>
+          </div>
+        );
+      }
+    };
 
+    const renderDeleteOrder = (order) => {
+      if (this.state.deleteSelected === order._id) {
+        return (
+          <div>
+            <button
+              onClick={() => this.confirmDeleteOrder()}
+              className='btn btn-primary btn-sm btn-warning'
+              key={order.quantity}
+            >
+              Cancel?
+            </button>
+            <button
+              onClick={() =>
+                this.deleteOrder(order._id) + this.confirmDeleteOrder()
+              }
+              className='btn btn-primary btn-sm btn-danger'
+              key={order.order_item}
+            >
+              Delete?
+            </button>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <button
+              onClick={() => this.confirmDeleteOrder(order)}
+              className='btn btn-danger'
+              key={order.ordered_by}
+            >
+              Delete
+            </button>
+          </div>
+        );
+      }
+    };
+    return (
+      <Template>
+        <div className='container-fluid'>
+          {this.state.orders.map((order) => {
+            const createdDate = new Date(order.createdAt);
+            return (
+              <div
+                className='row view-order-container'
+                key={order._id}
+                ref={this.updatedOrdersRef}
+              >
+                <div className='col-md-4 view-order-left-col p-3'>
+                  {renderEditOrder(order)}
+                </div>
+                <div className='col-md-4 view-order-middle-col'>
+                  <p>Ordered by: {order.ordered_by || ''}</p>
+                  <p>
+                    Order placed at{' '}
+                    {/* <Moment format='hh:mm:ss'>{`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}</Moment> */}
+                    {`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}
+                  </p>
+                </div>
+                <div className='col-md-4 view-order-right-col'>
+                  <button
+                    onClick={() => this.confirmEditOrder(order)}
+                    className='btn btn-primary btn-success'
+                    key={order}
+                  >
+                    Edit
+                  </button>
+                  {renderDeleteOrder(order)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Template>
+    );
+  }
+}
 export default ViewOrders;

@@ -1,39 +1,34 @@
 import { LOGIN, LOGOUT } from './types';
-import { SERVER_IP } from '../../private'
+import { SERVER_IP } from '../../private';
+import axios from 'axios';
 
 const finishLogin = (email, token) => {
-    return {
-        type: LOGIN,
-        payload: {
-            email,
-            token,
-        }
-    }
-}
+  return {
+    type: LOGIN,
+    payload: {
+      email,
+      token,
+    },
+  };
+};
 
 export const loginUser = (email, password) => {
-    return (dispatch) => {
-        fetch(`${SERVER_IP}/api/login`, {
-            method: 'POST',
-            body: JSON.stringify({
-                email,
-                password
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        }).then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                dispatch(finishLogin(response.email, response.token));
-            }
-        })
-    };
-}
+  return async (dispatch) => {
+    try {
+      const data = await axios.post(`${SERVER_IP}/api/login`, {
+        email,
+        password,
+      });
+      dispatch(finishLogin(data.data.email, data.data.token));
+    } catch (error) {
+      alert(error, 'Error Logging In');
+    }
+  };
+};
 
 export const logoutUser = () => {
-    return {
-        type: LOGOUT,
-        payload: null,
-    }
-}
+  return {
+    type: LOGOUT,
+    payload: null,
+  };
+};
