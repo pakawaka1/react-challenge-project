@@ -1,85 +1,49 @@
+import axios from 'axios';
 import { FETCH_ORDERS, NEW_ORDER, EDIT_ORDER, DELETE_ORDER } from './types';
 import { SERVER_IP } from '../../private';
 
-export const fetchOrders = () => (dispatch) => {
-  fetch(`${SERVER_IP}/api/current-orders`)
-    .then((res) => res.json())
-    .then((orders) =>
-      dispatch({
-        type: FETCH_ORDERS,
-        payload: orders,
-      })
-    );
+const URL = `${SERVER_IP}/api/`;
+
+export const fetchOrders = () => async (dispatch) => {
+  try {
+    const data = await axios.get(`${URL}/current-orders`);
+    return dispatch({ type: FETCH_ORDERS, payload: data.data });
+  } catch (error) {
+    alert(error, 'There was an error adding your order');
+  }
 };
 
-export const editOrder = (orderData) => (dispatch) => {
-  fetch(`${SERVER_IP}/api/edit-order`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ orderData }),
-  })
-    .then((res) => res.json())
-    .then((order) =>
-      dispatch({
-        type: EDIT_ORDER,
-        payload: order,
-      })
-    )
-    .then((res) => {
-      if (res.success) {
-        this.fetchOrders();
-      } else {
-        console.log('Error getting orders');
-      }
+export const editOrder = (orderData) => async (dispatch) => {
+  try {
+    const data = await axios.post(`${URL}/current-orders`, {
+      orderData,
     });
+    return dispatch({ type: EDIT_ORDER, payload: data.data });
+  } catch (error) {
+    alert(error, 'Error submitting your order');
+  }
 };
 
-export const deleteOrder = (orderData, allOrders, updatedOrders) => (
-  dispatch
-) => {
-  console.log(allOrders.length);
-  fetch(`${SERVER_IP}/api/delete-order`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+export const deleteOrder = (orderData) => async (dispatch) => {
+  try {
+    const data = await axios.post(`${URL}/current-orders`, {
       id: orderData,
-    }),
-  })
-    .then((res) => {(res.json())})
-    //   if (res.status === 200) 
-    //   } else {
-    //     console.log('Error getting orders');
-    //   }
-    // })
-    // .then((order) =>
-    //   dispatch({
-    //     type: DELETE_ORDER,
-    //     payload: updatedOrders,
-    //   })
-    // );
+    });
+    return dispatch({ type: DELETE_ORDER, payload: data.data });
+  } catch (error) {
+    alert(error, 'Error deleting your order');
+  }
 };
 
-export const createOrder = (orderData) => (dispatch) => {
-  fetch(`${SERVER_IP}/api/add-order`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
+export const createOrder = (orderData) => async (dispatch) => {
+  try {
+    const data = await axios.post(`${URL}/current-orders`, {
       order_item: orderData.order_item,
       quantity: orderData.quantity,
       ordered_by: this.props.auth.email || 'Unknown!',
-    }),
-  })
-    .then((res) => res.json())
-    .then((order) =>
-      dispatch({
-        type: NEW_ORDER,
-        payload: order,
-      })
-    );
+    });
+    return dispatch({ type: NEW_ORDER, payload: data.data });
+  } catch (error) {
+    alert(error, 'Error submitting your order');
+  }
 };

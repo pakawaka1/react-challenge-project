@@ -3,16 +3,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Template } from '../../components';
 import { connect } from 'react-redux';
+import './viewOrders.css';
+import '../../components/order-form/orderForm.css';
+import SelectForm from '../../components/select-form/selectForm';
 import {
   fetchOrders,
   editOrder,
   deleteOrder,
 } from '../../redux/actions/orderActions';
-
-import './viewOrders.css';
-import '../../components/order-form/orderForm.css';
-import SelectForm from '../../components/select-form/selectForm';
-
 class ViewOrders extends Component {
   constructor(props) {
     super(props);
@@ -100,7 +98,6 @@ class ViewOrders extends Component {
         );
       }
     };
-
     const renderDeleteOrder = (order) => {
       if (this.state.deleteSelected === order._id) {
         return (
@@ -178,6 +175,8 @@ class ViewOrders extends Component {
   }
 }
 
+// WHERE I GET THE PROPERT TYPES
+
 ViewOrders.propTypes = {
   fetchOrders: PropTypes.func.isRequired,
   editOrder: PropTypes.func.isRequired,
@@ -185,6 +184,8 @@ ViewOrders.propTypes = {
   orders: PropTypes.array.isRequired,
   order: PropTypes.object,
 };
+
+// WHERE ACCESS THE PROPERTIES
 
 const mapStateToProps = (state) => ({
   orders: state.order.items,
