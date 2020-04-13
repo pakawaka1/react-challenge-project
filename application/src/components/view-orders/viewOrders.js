@@ -3,7 +3,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Template } from '../../components';
 import { connect } from 'react-redux';
-import { fetchOrders } from '../../redux/actions/orderActions';
+import {
+  fetchOrders,
+  editOrder,
+  deleteOrder,
+} from '../../redux/actions/orderActions';
 
 import './viewOrders.css';
 import '../../components/order-form/orderForm.css';
@@ -26,15 +30,40 @@ class ViewOrders extends Component {
     this.props.fetchOrders();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.orders.length < this.props.orders.length) {
+  componentDidUpdate() {
+    this.updateRefs();
+  }
+
+  updateRefs() {
+    if (this.props.orders.length) {
       return this.updatedOrdersRef.current;
+    }
+  }
+
+  confirmEditOrder(data) {
+    if (this.state.editSelected === '') {
+      return this.setState({
+        editSelected: data._id,
+        ordered_by: data.ordered_by,
+        quantity: data.quantity,
+        order_item: data.order_item,
+      });
+    } else {
+      return this.setState({ editSelected: '' });
+    }
+  }
+
+  confirmDeleteOrder(data) {
+    if (this.state.deleteSelected === '') {
+      return this.setState({ deleteSelected: data._id });
+    } else {
+      return this.setState({ deleteSelected: '' });
     }
   }
 
   render() {
     const renderEditOrder = (order) => {
-      if (this.props.orders.id === order._id) {
+      if (this.state.editSelected === order._id) {
         return (
           <div className='form-wrapper'>
             <label className='form-label'>Edit Your Order:</label>
@@ -54,7 +83,7 @@ class ViewOrders extends Component {
                 type='button'
                 className='btn btn-primary btn-sm btn-success'
                 onClick={(event) =>
-                  this.editOrder(event, order) + this.confirmEditOrder()
+                  this.props.editOrder(event, order) + this.confirmEditOrder()
                 }
               >
                 Update
@@ -85,7 +114,7 @@ class ViewOrders extends Component {
             </button>
             <button
               onClick={() =>
-                this.deleteOrder(order._id) + this.confirmDeleteOrder()
+                this.props.deleteOrder(order._id) + this.confirmDeleteOrder()
               }
               className='btn btn-primary btn-sm btn-danger'
               key={order.order_item}
@@ -151,6 +180,8 @@ class ViewOrders extends Component {
 
 ViewOrders.propTypes = {
   fetchOrders: PropTypes.func.isRequired,
+  editOrder: PropTypes.func.isRequired,
+  deleteOrder: PropTypes.func.isRequired,
   orders: PropTypes.array.isRequired,
   order: PropTypes.object,
 };
@@ -160,4 +191,8 @@ const mapStateToProps = (state) => ({
   order: state.order.item,
 });
 
-export default connect(mapStateToProps, { fetchOrders })(ViewOrders);
+export default connect(mapStateToProps, {
+  fetchOrders,
+  editOrder,
+  deleteOrder,
+})(ViewOrders);

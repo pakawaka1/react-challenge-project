@@ -36,7 +36,10 @@ export const editOrder = (orderData) => (dispatch) => {
     });
 };
 
-export const deleteOrder = (orderData) => (dispatch) => {
+export const deleteOrder = (orderData, allOrders, updatedOrders) => (
+  dispatch
+) => {
+  console.log(allOrders.length);
   fetch(`${SERVER_IP}/api/delete-order`, {
     method: 'POST',
     headers: {
@@ -46,21 +49,18 @@ export const deleteOrder = (orderData) => (dispatch) => {
       id: orderData,
     }),
   })
-    .then((res) => {
-      if (res.status === 200) {
-        console.log('yolo');
-        // const updatedOrders = this.state.orders.filter(
-        //   (order) => order._id !== orderData
-      } else {
-        console.log('Error getting orders');
-      }
-    })
-    .then((order) =>
-      dispatch({
-        type: DELETE_ORDER,
-        payload: order,
-      })
-    );
+    .then((res) => {(res.json())})
+    //   if (res.status === 200) 
+    //   } else {
+    //     console.log('Error getting orders');
+    //   }
+    // })
+    // .then((order) =>
+    //   dispatch({
+    //     type: DELETE_ORDER,
+    //     payload: updatedOrders,
+    //   })
+    // );
 };
 
 export const createOrder = (orderData) => (dispatch) => {

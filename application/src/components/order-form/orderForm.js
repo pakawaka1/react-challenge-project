@@ -13,7 +13,6 @@ class OrderForm extends Component {
       order_item: '',
       quantity: '',
     };
-
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -60,4 +59,4 @@ const mapStateToProps = (state) => ({
 OrderForm.propTypes = {
   createOrder: PropTypes.func.isRequired,
 };
-export default connect(null, mapStateToProps, { createOrder })(OrderForm);
+export default connect(mapStateToProps, { createOrder })(OrderForm);

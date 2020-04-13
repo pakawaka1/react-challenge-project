@@ -30,7 +30,7 @@ export default (state = INITIAL_STATE, action) => {
     case DELETE_ORDER:
       return {
         ...state,
-        item: action.payload,
+        item: action.payload.orders,
       };
     default:
       return state;
