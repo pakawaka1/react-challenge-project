@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Template } from '../../components';
 import { SERVER_IP } from '../../private';
 import './viewOrders.css';
+const URL = `${SERVER_IP}/api/`;
 
 class ViewOrders extends Component {
   constructor(props) {
@@ -18,20 +20,21 @@ class ViewOrders extends Component {
   }
 
   componentDidMount() {
-    fetch(`${SERVER_IP}/api/current-orders`)
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          this.setState({ orders: response.orders });
-        } else {
-          console.log('Error getting orders');
-        }
-      });
+    this.fetchOrders();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.orders.length <= this.state.orders.length) {
       return this.updatedOrdersRef.current;
+    }
+  }
+
+  async fetchOrders() {
+    try {
+      const data = await axios.get(`${URL}/current-orders`);
+      return this.setState({ orders: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error getting orders');
     }
   }
 
@@ -56,12 +59,11 @@ class ViewOrders extends Component {
     }
   }
 
-  editOrder(event, order) {
+  async editOrder(event, order) {
     const orderItem = order.order_item;
     const orderQuantity = order.quantity;
-    fetch(`${SERVER_IP}/api/edit-order`, {
-      method: 'POST',
-      body: JSON.stringify({
+    try {
+      const data = await axios.post(`${URL}/edit-order`, {
         id: this.state.editSelected,
         order_item:
           this.state.order_item !== order.order_item
@@ -71,24 +73,14 @@ class ViewOrders extends Component {
           this.state.quantity !== order.quantity
             ? this.state.quantity
             : orderQuantity,
-        ordered_by: this.state.ordered_by,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          this.setState({ orders: response.orders });
-        } else {
-          console.log('Error getting orders');
-        }
       });
+      return this.setState({ orders: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error updating your order');
+    }
   }
 
   confirmDeleteOrder(data) {
-    console.log(data);
     if (this.state.deleteSelected === '') {
       return this.setState({ deleteSelected: data._id });
     } else {
@@ -96,24 +88,15 @@ class ViewOrders extends Component {
     }
   }
 
-  deleteOrder(data) {
-    fetch(`${SERVER_IP}/api/delete-order`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id: data,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          this.setState({ orders: response.orders });
-        } else {
-          console.log('Error getting orders');
-        }
+  async deleteOrder(orderData) {
+    try {
+      const data = await axios.post(`${URL}/delete-order`, {
+        id: orderData,
       });
+      return this.setState({ orders: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error deleting your order.');
+    }
   }
   render() {
     const renderEditOrder = (order) => {

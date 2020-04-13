@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Template } from '../../components';
 import { connect } from 'react-redux';
 import { SERVER_IP } from '../../private';
+import axios from 'axios';
 import './orderForm.css';
 const ADD_ORDER_URL = `${SERVER_IP}/api/add-order`;
 
@@ -26,23 +27,19 @@ class OrderForm extends Component {
     this.setState({ quantity: event.target.value });
   }
 
-  submitOrder(event) {
+  async submitOrder(event) {
     event.preventDefault();
     if (this.state.order_item === '') return;
-    fetch(ADD_ORDER_URL, {
-      method: 'POST',
-      body: JSON.stringify({
+    try {
+      const data = await axios.post(ADD_ORDER_URL, {
         order_item: this.state.order_item,
         quantity: this.state.quantity,
         ordered_by: this.props.auth.email || 'Unknown!',
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => console.log('Success', JSON.stringify(res)))
-      .catch((error) => console.error(error));
+      });
+      return this.setState({ order: data.data.orders });
+    } catch (error) {
+      alert(error, 'Error submitting your order');
+    }
   }
 
   render() {
