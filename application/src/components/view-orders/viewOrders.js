@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from 'axios'
+import Moment from 'Moment'
 import { Template } from '../../components';
 import { SERVER_IP } from '../../private';
 import './viewOrders.css';
