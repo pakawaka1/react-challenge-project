@@ -1,9 +1,9 @@
 import {
   FETCH_ORDERS,
-  ADD_ORDER,
   NEW_ORDER,
   EDIT_ORDER,
   DELETE_ORDER,
+  ORDER_FORM,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -17,11 +17,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         items: action.payload.orders,
-      };
-    case ADD_ORDER:
-      return {
-        ...state,
-        item: action.payload.order,
       };
     case NEW_ORDER:
       return {
@@ -37,6 +32,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         item: action.payload.orders,
+      };
+    case ORDER_FORM:
+      return {
+        ...state,
+        item: action.payload.order,
       };
     default:
       return state;

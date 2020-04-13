@@ -1,45 +1,68 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import { createOrder, editOrder } from '../actions/postActions';
+import { connect } from 'react-redux';
+import { updateOrderForm } from '../../redux/actions/orderActions';
 
 class SelectForm extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
     this.state = {
       order_item: '',
       quantity: '',
     };
   }
-  //   this.onChange = this.onChange.bind(this);
-  //   this.onSubmit = this.onSubmit.bind(this);
-  // }
 
-  // onChange(e) {
-  //   this.setState({ [e.target.name]: e.target.value });
-  // }
-
-  // onSubmit(e) {
-  //   e.preventDefault();
-  //   const order = {
-  //     order_item: this.state.order_item,
-  //     quantity: this.state.quantity,
-  //   };
-  //   this.props.createrOrder(order);
-  //   this.props.editOrder(order);
-  // }
+  onChange(key, val) {
+    this.setState({ [key]: val });
+    this.props.updateOrder(this.state.order_item, this.state.quantity);
+  }
 
   render() {
+    const renderOrderItem = () => {
+      console.log(this.state.order_item);
+      if (this.state.order_item !== '') {
+        return (
+          <option value='' defaultValue>
+            {this.state.order_item}
+          </option>
+        );
+      } else {
+        return (
+          <option value='' defaultValue disabled hidden>
+            Lunch Menu
+          </option>
+        );
+      }
+    };
+
+    const renderOrderQuantity = () => {
+      console.log(this.state.quantity);
+      if (this.state.quantity !== '') {
+        return (
+          <option value='' defaultValue>
+            {this.state.quantity}
+          </option>
+        );
+      } else {
+        return (
+          <option value='' defaultValue disabled hidden>
+            Quantity
+          </option>
+        );
+      }
+    };
+
     return (
       <form>
         <label>Select Menu Item: </label>
         <div>
-          <select value={this.state.order_item}>
-            <option value='' defaultValue disabled hidden>
-              {this.state.order_item !== null
-                ? this.state.order_item
-                : 'Lunch Menu'}
-            </option>
+          <select
+            value={this.state.order_item}
+            onChange={(e) => this.onChange('order_item', e.target.value)}
+          >
+            {renderOrderItem()}
+            {/* <option value='' defaultValue disabled>
+              {this.state.order_item !== '' ? this.state.order_item : ''}
+            </option> */}
             <option value='Soup of the Day'>Soup of the Day</option>
             <option value='Linguini With White Wine Sauce'>
               Linguini With White Wine Sauce
@@ -52,10 +75,14 @@ class SelectForm extends Component {
         </div>
         <label>Quantity: </label>
         <div>
-          <select value={this.state.quantity}>
-            <option value='' defaultValue disabled hidden>
-              {this.state.quantity !== null ? this.state.quantity : '1'}
-            </option>
+          <select
+            value={this.state.quantity}
+            onChange={(e) => this.onChange('quantity', e.target.value)}
+          >
+            {renderOrderQuantity()}
+            {/* <option value='' defaultValue>
+              {this.state.quantity !== '' ? this.state.quantity : '1'}
+            </option> */}
             <option value='1'>1</option>
             <option value='2'>2</option>
             <option value='3'>3</option>
@@ -69,10 +96,10 @@ class SelectForm extends Component {
   }
 }
 
-// PostForm.propTypes = {
-//   createPost: PropTypes.func.isRequired,
-//   editOrder: PropTypes.func.isRequired,
-// };
+const mapActionsToProps = (dispatch) => ({
+  updateOrder(order_item, quantity) {
+    dispatch(updateOrderForm(order_item, quantity));
+  },
+});
 
-export default SelectForm;
-// export default connect(null, { createOrder, editOrder, })(SelectForm);
+export default connect(null, mapActionsToProps)(SelectForm);

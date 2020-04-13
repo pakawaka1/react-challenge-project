@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { FETCH_ORDERS, NEW_ORDER, EDIT_ORDER, DELETE_ORDER } from './types';
+import {
+  FETCH_ORDERS,
+  NEW_ORDER,
+  EDIT_ORDER,
+  DELETE_ORDER,
+  ORDER_FORM,
+} from './types';
 import { SERVER_IP } from '../../private';
 
 const URL = `${SERVER_IP}/api/`;
@@ -46,4 +52,11 @@ export const createOrder = (orderData) => async (dispatch) => {
   } catch (error) {
     alert(error, 'Error submitting your order');
   }
+};
+
+export const updateOrderForm = (orderData) => {
+  return {
+    type: ORDER_FORM,
+    payload: orderData,
+  };
 };
