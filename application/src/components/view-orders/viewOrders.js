@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios'
-import Moment from 'Moment'
+// import Moment from 'react-moment'
+import axios from 'axios';
+import Moment from 'Moment';
 import { Template } from '../../components';
 import { SERVER_IP } from '../../private';
 import './viewOrders.css';
@@ -220,6 +221,7 @@ class ViewOrders extends Component {
                   <p>Ordered by: {order.ordered_by || ''}</p>
                   <p>
                     Order placed at{' '}
+                    {/* <Moment format='hh:mm:ss'>{`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}</Moment> */}
                     {`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}
                   </p>
                 </div>
