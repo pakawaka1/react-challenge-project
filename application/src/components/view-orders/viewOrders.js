@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // import Moment from 'react-moment'
 import axios from 'axios';
-import Moment from 'Moment';
 import { Template } from '../../components';
 import { SERVER_IP } from '../../private';
 import './viewOrders.css';
@@ -100,62 +99,11 @@ class ViewOrders extends Component {
       alert(error, 'Error deleting your order.');
     }
   }
+  
   render() {
     const renderEditOrder = (order) => {
       if (this.state.editSelected === order._id) {
         return (
-          <form>
-            <label className='form-label'>Edit Order:</label>
-            <br />
-            <select
-              value={this.state.order_item}
-              onChange={(event) => this.editItemChosen(event)}
-            >
-              <option value='' defaultValue disabled hidden>
-                {order.order_item}
-              </option>
-              <option value='Soup of the Day'>Soup of the Day</option>
-              <option value='Linguini With White Wine Sauce'>
-                Linguini With White Wine Sauce
-              </option>
-              <option value='Eggplant and Mushroom Panini'>
-                Eggplant and Mushroom Panini
-              </option>
-              <option value='Chili Con Carne'>Chili Con Carne</option>
-            </select>
-            <br />
-            <label className='qty-label'>Edit Quantity:</label>
-            <select
-              value={this.state.quantity}
-              onChange={(event) => this.editItemQuantity(event)}
-            >
-              <option value='' defaultValue disabled hidden>
-                {order.quantity}
-              </option>
-              <option value='1'>1</option>
-              <option value='2'>2</option>
-              <option value='3'>3</option>
-              <option value='4'>4</option>
-              <option value='5'>5</option>
-              <option value='6'>6</option>
-            </select>
-            <button
-              type='button'
-              className='btn btn-primary btn-sm btn-warning'
-              onClick={(event) => this.confirmEditOrder()}
-            >
-              Cancel?
-            </button>
-            <button
-              type='button'
-              className='btn btn-primary btn-sm btn-success'
-              onClick={(event) =>
-                this.editOrder(event, order) + this.confirmEditOrder()
-              }
-            >
-              Update
-            </button>
-          </form>
         );
       } else {
         return (
