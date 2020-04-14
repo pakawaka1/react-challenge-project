@@ -1,6 +1,5 @@
 import {
   FETCH_ORDERS,
-  NEW_ORDER,
   EDIT_ORDER,
   DELETE_ORDER,
   ORDER_FORM,
@@ -8,7 +7,11 @@ import {
 
 const INITIAL_STATE = {
   items: [],
-  item: {},
+  item: {
+    order_item: '',
+    quantity: '',
+    ordered_by: '',
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -18,15 +21,10 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         items: action.payload.orders,
       };
-    case NEW_ORDER:
-      return {
-        ...state,
-        item: action.payload.order,
-      };
     case EDIT_ORDER:
       return {
         ...state,
-        item: action.payload,
+        item: action.payload.order,
       };
     case DELETE_ORDER:
       return {
@@ -36,7 +34,11 @@ export default (state = INITIAL_STATE, action) => {
     case ORDER_FORM:
       return {
         ...state,
-        item: action.payload.order,
+        item: {
+          order_item: action.payload.order_item,
+          quantity: action.payload.quantity,
+          ordered_by: action.payload.email,
+        },
       };
     default:
       return state;

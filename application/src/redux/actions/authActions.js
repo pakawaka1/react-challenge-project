@@ -18,7 +18,7 @@ export const loginUser = (email, password) => async (dispatch) => {
       email,
       password,
     });
-    return dispatch(finishLogin(data.email, data.token));
+    return dispatch(finishLogin(data.data.email, data.data.token));
   } catch (error) {
     alert(error, 'Please check your email and password');
   }

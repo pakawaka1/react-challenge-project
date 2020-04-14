@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Template } from '../../components';
 import { connect } from 'react-redux';
 import { createOrder } from '../../redux/actions/orderActions';
@@ -7,27 +7,17 @@ import './orderForm.css';
 import SelectForm from '../../components/select-form/selectForm';
 
 class OrderForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      order_item: '',
-      quantity: '',
+  submitOrder(event) {
+    event.preventDefault();
+    if (this.props.order_item === '') {
+      return alert('Please enter all fields');
+    }
+    let order = {
+      order_item: this.props.order_item,
+      quantity: this.props.quantity,
+      ordered_by: this.props.ordered_by,
     };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-  }
-  onSubmit(e) {
-    e.preventDefault();
-    if (this.state.order_item === '') return;
-    const order = {
-      order_item: this.state.order_item,
-      quantity: this.state.quantity,
-    };
-    this.props.createOrder(order);
+    return this.props.createOrder(order);
   }
 
   render() {
@@ -36,10 +26,15 @@ class OrderForm extends Component {
         <div className='form-wrapper'>
           <label className='form-label'>I'd like to order...</label>
           <SelectForm>
-            <select value={this.state.order_item} onChange={this.onChange} />
-            <select value={this.state.quantity} onChange={this.onChange} />
+            <select value={this.props.order_item} />
+            <select value={this.props.quantity} />
           </SelectForm>
-          <button type='button' className='order-btn' onClick={this.onSubmit}>
+          <button
+            type='button'
+            className='order-btn'
+            value={this.state}
+            onClick={(event) => this.submitOrder(event)}
+          >
             Order It!
           </button>
         </div>
@@ -48,15 +43,10 @@ class OrderForm extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   : state.order.item,
-// });
-
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  order_item: state.order.item.order_item,
+  quantity: state.order.item.quantity,
+  ordered_by: state.auth.email,
 });
 
-OrderForm.propTypes = {
-  createOrder: PropTypes.func.isRequired,
-};
 export default connect(mapStateToProps, { createOrder })(OrderForm);
