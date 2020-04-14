@@ -9,9 +9,6 @@ import SelectForm from '../../components/select-form/selectForm';
 class OrderForm extends Component {
   submitOrder(event) {
     event.preventDefault();
-    if (this.props.order_item === '') {
-      return alert('Please enter all fields');
-    }
     let order = {
       order_item: this.props.order_item,
       quantity: this.props.quantity,
