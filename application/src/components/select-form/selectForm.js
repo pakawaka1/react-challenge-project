@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateOrder } from '../../redux/actions/orderActions';
-
+import './selectForm.css';
 class SelectForm extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +44,7 @@ class SelectForm extends Component {
         <label>Select Menu Item: </label>
         <div>
           <select
+            className='menu-select'
             value={this.state.order_item}
             onChange={(e) => this.onChangeOrder('order_item', e.target.value)}
           >
@@ -61,6 +62,7 @@ class SelectForm extends Component {
         <label>Quantity: </label>
         <div>
           <select
+            className='menu-select'
             value={this.state.quantity}
             onChange={(e) => this.onChangeOrder('quantity', e.target.value)}
           >
