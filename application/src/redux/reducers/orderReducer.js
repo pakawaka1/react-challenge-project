@@ -1,13 +1,9 @@
-import {
-  FETCH_ORDERS,
-  EDIT_ORDER,
-  DELETE_ORDER,
-  ORDER_FORM,
-} from '../actions/types';
+import { FETCH_ORDERS, EDIT_ORDER, ADD_ORDER } from '../actions/types';
 
 const INITIAL_STATE = {
   items: [],
   item: {
+    id: '',
     order_item: '',
     quantity: '',
     ordered_by: '',
@@ -24,14 +20,13 @@ export default (state = INITIAL_STATE, action) => {
     case EDIT_ORDER:
       return {
         ...state,
-        item: action.payload.order,
+        item: {
+          id: action.payload.id,
+          order_item: action.payload.order_item,
+          quantity: action.payload.quantity,
+        },
       };
-    case DELETE_ORDER:
-      return {
-        ...state,
-        item: action.payload.orders,
-      };
-    case ORDER_FORM:
+    case ADD_ORDER:
       return {
         ...state,
         item: {

@@ -1,26 +1,40 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateOrder } from '../../redux/actions/orderActions';
+import {
+  setNewOrder,
+  updateExistingOrder,
+} from '../../redux/actions/orderActions';
 import './selectForm.css';
 class SelectForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       order_item: '',
       quantity: '',
+      ordered_by: '',
     };
   }
 
   async onChangeOrder(key, val) {
     await this.setState({ [key]: val });
+    console.log(this.state);
+    console.log(this.props);
+
+    if (this.state.order_item !== this.props.order_item) {
+      return this.props.updateExistingOrder(this.state.order_item);
+    }
+    if (this.state.quantity !== this.props.order_item) {
+      return this.props.updateExistingOrder(this.state.quantity);
+    }
     if (this.state.order_item !== '' && this.state.quantity !== '') {
-      return this.props.updateOrder(this.state.order_item, this.state.quantity);
+      return this.props.setNewOrder(this.state.order_item, this.state.quantity);
     }
   }
 
   render() {
     const renderOrderItem = () => {
-      if (this.state.order_item === '') {
+      if (this.props.id === '') {
         return (
           <option value='' defaultValue disabled hidden>
             Lunch Menu
@@ -45,8 +59,15 @@ class SelectForm extends Component {
         <div>
           <select
             className='menu-select'
-            value={this.state.order_item}
-            onChange={(e) => this.onChangeOrder('order_item', e.target.value)}
+            value={
+              this.state.order_item === '' ||
+              this.state.order_item === this.props.order_item
+                ? this.props.order_item
+                : this.state.order_item
+            }
+            onChange={(event) =>
+              this.onChangeOrder('order_item', event.target.value)
+            }
           >
             {renderOrderItem()}
             <option value='Soup of the Day'>Soup of the Day</option>
@@ -63,8 +84,15 @@ class SelectForm extends Component {
         <div>
           <select
             className='menu-select'
-            value={this.state.quantity}
-            onChange={(e) => this.onChangeOrder('quantity', e.target.value)}
+            value={
+              this.state.quantity === '' ||
+              this.state.quantity === this.props.quantity
+                ? this.props.quantity
+                : this.state.quantity
+            }
+            onChange={(event) =>
+              this.onChangeOrder('quantity', event.target.value)
+            }
           >
             {renderOrderQuantity()}
             <option value='1'>1</option>
@@ -80,4 +108,13 @@ class SelectForm extends Component {
   }
 }
 
-export default connect(null, { updateOrder })(SelectForm);
+const mapStateToProps = (state) => ({
+  id: state.order.item.id,
+  order_item: state.order.item.order_item,
+  quantity: state.order.item.quantity,
+  ordered_by: state.auth.email,
+});
+
+export default connect(mapStateToProps, { setNewOrder, updateExistingOrder })(
+  SelectForm
+);
