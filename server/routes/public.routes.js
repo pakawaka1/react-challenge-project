@@ -4,7 +4,7 @@ const Order = require('../models/order.model');
 const router = express.Router();
 
 router.get('/test', (req, res) => {
-  console.log('Test endpoint hit!');
+  ('Test endpoint hit!');
   res.json({ success: true });
 });
 
@@ -87,6 +87,7 @@ router.post('/edit-order', async (req, res) => {
       return;
     }
     const orders = await Order.find();
+    console.log(orders)
     res.status(200).json({ success: true, orders });
   } catch (error) {
     res.status(500).json({ success: false, error });

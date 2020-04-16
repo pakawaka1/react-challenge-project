@@ -16,19 +16,27 @@ class SelectForm extends Component {
     };
   }
 
+  // to add a new Order or update existing order
+
   async onChangeOrder(key, val) {
     await this.setState({ [key]: val });
-    console.log(this.state);
-    console.log(this.props);
-
-    if (this.state.order_item !== this.props.order_item) {
-      return this.props.updateExistingOrder(this.state.order_item);
-    }
-    if (this.state.quantity !== this.props.order_item) {
-      return this.props.updateExistingOrder(this.state.quantity);
-    }
-    if (this.state.order_item !== '' && this.state.quantity !== '') {
-      return this.props.setNewOrder(this.state.order_item, this.state.quantity);
+    const order = {
+      id: this.state.id === '' ? this.props.id : this.state.id,
+      order_item:
+        this.state.order_item === ''
+          ? this.props.order_item
+          : this.state.order_item,
+      quantity:
+        this.state.quantity === '' ? this.props.quantity : this.state.quantity,
+      ordered_by:
+        this.state.ordered_by === ''
+          ? this.props.ordered_by
+          : this.state.ordered_by,
+    };
+    if (order.id === '' && order.order_item !== '' && order.quantity !== '') {
+      return this.props.setNewOrder(order.order_item, order.quantity);
+    } else {
+      return this.props.updateExistingOrder(order);
     }
   }
 
@@ -60,8 +68,7 @@ class SelectForm extends Component {
           <select
             className='menu-select'
             value={
-              this.state.order_item === '' ||
-              this.state.order_item === this.props.order_item
+              this.state.order_item === ''
                 ? this.props.order_item
                 : this.state.order_item
             }
@@ -85,8 +92,7 @@ class SelectForm extends Component {
           <select
             className='menu-select'
             value={
-              this.state.quantity === '' ||
-              this.state.quantity === this.props.quantity
+              this.state.quantity === ''
                 ? this.props.quantity
                 : this.state.quantity
             }
@@ -115,6 +121,7 @@ const mapStateToProps = (state) => ({
   ordered_by: state.auth.email,
 });
 
-export default connect(mapStateToProps, { setNewOrder, updateExistingOrder })(
-  SelectForm
-);
+export default connect(mapStateToProps, {
+  setNewOrder,
+  updateExistingOrder,
+})(SelectForm);

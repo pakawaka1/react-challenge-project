@@ -15,11 +15,11 @@ require('dotenv').config();
 mongoose.connect(process.env.MONGODATABASE);
 // display message on connect
 mongoose.connection.on('connected', () => {
-  console.log('Connected to databse: ', process.env.MONGODATABASE);
+  'Connected to databse: ', process.env.MONGODATABASE;
 });
 // display message on error
 mongoose.connection.on('error', (err) => {
-  console.log('Database error: ', err);
+  'Database error: ', err;
 });
 
 // logger
@@ -35,7 +35,10 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Expose-Headers', 'Authorization, refresh');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, refresh');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, refresh'
+  );
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
   next();
 });
@@ -46,8 +49,10 @@ app.use('/api', routes);
 
 // test route
 app.get('/', (req, res) => {
-    console.log('Hi!');
-    res.send('Hi!');
-})
+  ('Hi!');
+  res.send('Hi!');
+});
 
-app.listen(port, () => { console.log(`Listening on port ${port}`)});
+app.listen(port, () => {
+  `Listening on port ${port}`;
+});

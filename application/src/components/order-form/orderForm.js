@@ -9,7 +9,7 @@ import SelectForm from '../../components/select-form/selectForm';
 class OrderForm extends Component {
   submitOrder(event) {
     event.preventDefault();
-    let order = {
+    const order = {
       order_item: this.props.order_item,
       quantity: this.props.quantity,
       ordered_by: this.props.ordered_by,
@@ -29,7 +29,6 @@ class OrderForm extends Component {
           <button
             type='button'
             className='order-btn'
-            value={this.state}
             onClick={(event) => this.submitOrder(event)}
           >
             Order It!

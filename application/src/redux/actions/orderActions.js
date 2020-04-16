@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { FETCH_ORDERS, EDIT_ORDER, ADD_ORDER } from './types';
+import { FETCH_ORDERS, ADD_ORDER, EDIT_ORDER } from './types';
 import { SERVER_IP } from '../../private';
 
-const URL = `${SERVER_IP}/api/`;
+const URL = `${SERVER_IP}/api`;
 
 export const fetchOrders = () => async (dispatch) => {
   try {
@@ -14,12 +14,13 @@ export const fetchOrders = () => async (dispatch) => {
 };
 
 export const editOrder = (orderData) => async (dispatch) => {
-  console.log(orderData);
   try {
     const data = await axios.post(`${URL}/edit-order`, {
-      orderData,
+      id: orderData.id,
+      order_item: orderData.order_item,
+      quantity: orderData.quantity,
+      ordered_by: orderData.ordered_by,
     });
-    console.log(data.data);
     return dispatch({ type: FETCH_ORDERS, payload: data.data });
   } catch (error) {
     alert(error, 'Error submitting your order');
@@ -27,19 +28,17 @@ export const editOrder = (orderData) => async (dispatch) => {
 };
 
 export const deleteOrder = (orderData) => async (dispatch) => {
-  console.log(orderData);
   try {
     const data = await axios.post(`${URL}/delete-order`, {
       id: orderData,
     });
-    console.log(data.data);
     return dispatch({ type: FETCH_ORDERS, payload: data.data });
   } catch (error) {
     alert(error, 'Error deleting your order');
   }
 };
 
-export const createOrder = (orderData) => async () => {
+export const createOrder = (orderData) => async (dispatch) => {
   try {
     await axios.post(`${URL}/add-order`, {
       order_item: orderData.order_item,
@@ -67,9 +66,10 @@ export const updateExistingOrder = (data) => {
   return {
     type: EDIT_ORDER,
     payload: {
-      id: data._id,
+      id: data.id,
       order_item: data.order_item,
       quantity: data.quantity,
+      ordered_by: data.ordered_by,
     },
   };
 };

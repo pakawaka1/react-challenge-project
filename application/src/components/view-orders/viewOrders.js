@@ -20,7 +20,7 @@ class ViewOrders extends Component {
       order_item: '',
       quantity: '',
       deleteId: '',
-      editId: '',
+      id: '',
     };
   }
   componentDidMount() {
@@ -38,25 +38,26 @@ class ViewOrders extends Component {
   }
 
   async confirmEditOrder(data) {
-    if (this.state.editId === '') {
+    if (this.state.id === '') {
       await this.setState({
-        editId: data._id,
+        id: data._id,
         ordered_by: data.ordered_by,
         quantity: data.quantity,
         order_item: data.order_item,
       });
-      return this.props.updateExistingOrder(this.state);
+      this.props.updateExistingOrder(this.state);
     } else {
-      return this.setState({ editId: '' });
+      return this.setState({ id: '' });
     }
   }
 
   updateOrder(event) {
     event.preventDefault();
-    let order = {
+    const order = {
       id: this.props.id,
       order_item: this.props.order_item,
       quantity: this.props.quantity,
+      ordered_by: this.props.ordered_by,
     };
     return this.props.editOrder(order);
   }
@@ -71,19 +72,19 @@ class ViewOrders extends Component {
 
   render() {
     const renderEditOrder = (order) => {
-      if (this.state.editId === order._id) {
+      if (this.state.id === order._id) {
         return (
           <div className='form-wrapper'>
             <label className='form-label'>Edit Your Order:</label>
             <SelectForm>
-              <select value={this.state.order_item} />
-              <select value={this.state.quantity} />
+              <select value={this.props.order_item} />
+              <select value={this.props.quantity} />
             </SelectForm>
             <div className='editButtons'>
               <button
                 type='button'
                 className='btn btn-primary btn-sm btn-warning'
-                onClick={() => this.confirmEditOrder()}
+                onClick={(event) => this.confirmEditOrder(event)}
               >
                 Cancel?
               </button>
@@ -91,7 +92,7 @@ class ViewOrders extends Component {
                 type='button'
                 className='btn btn-primary btn-sm btn-success'
                 onClick={(event) =>
-                  this.props.editOrder(event, order) + this.confirmEditOrder()
+                  this.updateOrder(event) + this.confirmEditOrder()
                 }
               >
                 Update
@@ -113,7 +114,7 @@ class ViewOrders extends Component {
         return (
           <div>
             <button
-              onClick={() => this.confirmDeleteOrder()}
+              onClick={(event) => this.confirmDeleteOrder(event)}
               className='btn btn-primary btn-sm btn-warning'
               key={order.quantity}
             >
@@ -187,10 +188,11 @@ class ViewOrders extends Component {
 
 const mapStateToProps = (state) => ({
   orders: state.order.items,
-  editId: state.order.item.id,
+  id: state.order.item.id,
   deleteId: state.order.item.id,
   order_item: state.order.item.order_item,
   quantity: state.order.item.quantity,
+  ordered_by: state.auth.email,
 });
 
 export default connect(mapStateToProps, {
