@@ -15,7 +15,6 @@ class SelectForm extends Component {
       ordered_by: '',
     };
   }
-
   // to add a new Order or update existing order
 
   async onChangeOrder(key, val) {

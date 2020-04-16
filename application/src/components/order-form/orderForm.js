@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { Template } from '../../components';
 import { connect } from 'react-redux';
-import { createOrder } from '../../redux/actions/orderActions';
+import { createOrder, clearOrder } from '../../redux/actions/orderActions';
 import './orderForm.css';
 import SelectForm from '../../components/select-form/selectForm';
 
 class OrderForm extends Component {
+  componentDidMount() {
+    this.props.clearOrder();
+  }
+
   submitOrder(event) {
     event.preventDefault();
     const order = {
@@ -14,7 +18,7 @@ class OrderForm extends Component {
       quantity: this.props.quantity,
       ordered_by: this.props.ordered_by,
     };
-    return this.props.createOrder(order);
+    this.props.createOrder(order);
   }
 
   render() {
@@ -45,4 +49,4 @@ const mapStateToProps = (state) => ({
   ordered_by: state.auth.email,
 });
 
-export default connect(mapStateToProps, { createOrder })(OrderForm);
+export default connect(mapStateToProps, { createOrder, clearOrder })(OrderForm);

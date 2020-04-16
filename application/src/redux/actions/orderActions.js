@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_ORDERS, ADD_ORDER, EDIT_ORDER } from './types';
+import { FETCH_ORDERS, ADD_ORDER, EDIT_ORDER, CLEAR_ORDER } from './types';
 import { SERVER_IP } from '../../private';
 
 const URL = `${SERVER_IP}/api`;
@@ -21,7 +21,7 @@ export const editOrder = (orderData) => async (dispatch) => {
       quantity: orderData.quantity,
       ordered_by: orderData.ordered_by,
     });
-    return dispatch({ type: FETCH_ORDERS, payload: data.data });
+    await dispatch({ type: FETCH_ORDERS, payload: data.data });
   } catch (error) {
     alert(error, 'Error submitting your order');
   }
@@ -38,7 +38,7 @@ export const deleteOrder = (orderData) => async (dispatch) => {
   }
 };
 
-export const createOrder = (orderData) => async (dispatch) => {
+export const createOrder = (orderData) => async () => {
   try {
     await axios.post(`${URL}/add-order`, {
       order_item: orderData.order_item,
@@ -71,5 +71,12 @@ export const updateExistingOrder = (data) => {
       quantity: data.quantity,
       ordered_by: data.ordered_by,
     },
+  };
+};
+
+export const clearOrder = () => {
+  return {
+    type: CLEAR_ORDER,
+    payload: null,
   };
 };

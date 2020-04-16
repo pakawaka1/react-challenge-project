@@ -1,4 +1,9 @@
-import { FETCH_ORDERS, EDIT_ORDER, ADD_ORDER } from '../actions/types';
+import {
+  FETCH_ORDERS,
+  EDIT_ORDER,
+  ADD_ORDER,
+  CLEAR_ORDER,
+} from '../actions/types';
 
 const INITIAL_STATE = {
   items: [],
@@ -34,6 +39,8 @@ export default (state = INITIAL_STATE, action) => {
           quantity: action.payload.quantity,
         },
       };
+    case CLEAR_ORDER:
+      return { ...state, ...INITIAL_STATE };
     default:
       return state;
   }
