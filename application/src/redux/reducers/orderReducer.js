@@ -7,11 +7,7 @@ import {
 
 const INITIAL_STATE = {
   items: [],
-  item: {
-    id: '',
-    order_item: '',
-    quantity: '',
-  },
+  item: {},
 };
 
 export default (state = INITIAL_STATE, action) => {

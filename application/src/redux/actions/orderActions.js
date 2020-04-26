@@ -39,6 +39,7 @@ export const deleteOrder = (orderData) => async (dispatch) => {
 };
 
 export const createOrder = (orderData) => async () => {
+  console.log(orderData);
   try {
     await axios.post(`${URL}/add-order`, {
       order_item: orderData.order_item,

@@ -41,7 +41,7 @@ class SelectForm extends Component {
 
   render() {
     const renderOrderItem = () => {
-      if (this.props.id === '') {
+      if (this.props.id === undefined) {
         return (
           <option value='' defaultValue disabled hidden>
             Lunch Menu
@@ -51,7 +51,7 @@ class SelectForm extends Component {
     };
 
     const renderOrderQuantity = () => {
-      if (this.state.quantity === '') {
+      if (this.props.quantity === undefined) {
         return (
           <option value='' defaultValue disabled hidden>
             Quantity
@@ -67,7 +67,7 @@ class SelectForm extends Component {
           <select
             className='menu-select'
             value={
-              this.state.order_item === ''
+              this.props.order_item !== undefined
                 ? this.props.order_item
                 : this.state.order_item
             }
@@ -91,7 +91,7 @@ class SelectForm extends Component {
           <select
             className='menu-select'
             value={
-              this.state.quantity === ''
+              this.props.quantity !== undefined
                 ? this.props.quantity
                 : this.state.quantity
             }
